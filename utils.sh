@@ -15,13 +15,14 @@
 # Error code    1      -- error
 # -------------------------------------------------
 
-[ -z "$1" ] && exit 1
+[ -n "$1" ] || exit 1
 
-[[ "$1" == "build" ]] && shift && ./generate-code.sh "$@" && exit 0 || exit $?
-[[ "$1" == "deploy" ]] && shift && ./deploy.sh "$@" && exit 0 || exit $?
 
-[[ "$1" == "all" ]] && shift && ./generate-code.sh "$@" && ./deploy.sh "$@" && exit 0 || exit $?
-[[ "$1" == "both" ]] && shift && ./generate-code.sh "$@" && ./deploy.sh "$@" && exit 0 || exit $?
+[[ "$1" == "build" ]] && shift && ./generate-code.sh "$@" && exit 0
+[[ "$1" == "deploy" ]] && shift && ./deploy.sh "$@" && exit 0
+
+[[ "$1" == "all" ]] && shift && ./generate-code.sh "$@" && ./deploy.sh "$@" && exit 0
+[[ "$1" == "both" ]] && shift && ./generate-code.sh "$@" && ./deploy.sh "$@" && exit 0
 
 
 echo "

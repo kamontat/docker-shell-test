@@ -1,5 +1,5 @@
 
-FROM bash:4.0.44
+FROM bash:latest
 
 # shellcheck version 0.4.6
 COPY shellcheck-0.4.6/shellcheck /usr/local/bin/shellcheck
