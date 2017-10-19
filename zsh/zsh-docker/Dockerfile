@@ -1,8 +1,8 @@
-FROM alpine
+FROM alpine:3.4
 
 RUN apk update
 RUN apk upgrade
-RUN apk add zsh=5.3.1-r0
+RUN apk add zsh=5.2-r1
 
 ENTRYPOINT ["/bin/zsh"]
 CMD ["zsh"]
