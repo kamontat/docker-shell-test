@@ -9,3 +9,8 @@ run using command: `docker run --rm -it -v <local-file>:<remote-file> kamontat/s
 - `remote-file` - name and locate it in container
 - `tag` - tag that you can find in this [link](https://hub.docker.com/r/kamontat/shell-test/tags/)
   - follow pattern `[bash|zsh]-([0-9.-]+)`
+
+# Reference
+1. [shellcheck](https://github.com/koalaman/shellcheck) - for lint check
+2. [bash](https://hub.docker.com/_/bash/) - offical bash container
+3. [alpine](http://alpinelinux.org/) - base lightweight linux OS
