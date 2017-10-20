@@ -67,5 +67,8 @@ ENTRYPOINT [\"/usr/local/bin/shellcheck\"]
 # check optional parameter 3 - this a shellcheck version
 [ -n "$3" ] && SHELL_CHECK_VERSION="$3"
 
-generate_code "$1" "$2" "$SHELL_CHECK_VERSION" > "$1/Dockerfile"
+sh="$1"
+[[ "$sh" == "zsh" ]] && sh="kamontat/$sh"
+
+generate_code "$sh" "$2" "$SHELL_CHECK_VERSION" > "$1/Dockerfile"
 
