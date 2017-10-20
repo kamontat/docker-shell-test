@@ -1,5 +1,5 @@
 
-FROM kamontat/zsh:5.2-r1
+FROM kamontat/zsh:latest
 
 # shellcheck version 0.4.6
 COPY shellcheck-0.4.6/shellcheck /usr/local/bin/shellcheck
