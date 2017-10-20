@@ -1,4 +1,4 @@
-# Docker 
+# Docker [![Docker Pulls](https://img.shields.io/docker/pulls/kamontat/zsh.svg?style=flat-square)](https://store.docker.com/community/images/kamontat/zsh)
 - hub: https://hub.docker.com/r/kamontat/zsh/
 - store: https://store.docker.com/community/images/kamontat/zsh
 
