@@ -4,10 +4,11 @@
 - store: https://store.docker.com/community/images/kamontat/shell-test
 
 # Usage
-run using command: `docker run --rm -it -v <local-file>:<remote-file> kamontat/shell-test:<tag> <remote-file>`
-- `local-file` - you can move you file into inside of container
-- `remote-file` - name and locate it in container
-- `tag` - tag that you can find in this [link](https://hub.docker.com/r/kamontat/shell-test/tags/)
+In default this container config default execute command to `shellcheck` but you also able to change using other execute command by pass this option (`--entrypoint=""`) to you `docker run` command.
+- Run using command: `docker run --rm -it -v <local-file>:<remote-file> kamontat/shell-test:<tag> <remote-file>`
+    - `local-file` - you can move you file into inside of container
+    - `remote-file` - name and locate it in container
+    - `tag` - tag that you can find in this [link](https://hub.docker.com/r/kamontat/shell-test/tags/)
   - follow pattern `[bash|zsh]-([0-9.-]+)`
 
 # Reference
