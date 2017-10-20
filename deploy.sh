@@ -55,9 +55,9 @@ TAG_NAME="$1-$2"
 FULLY_IMAGE_NAME="$IMAGE_NAME:$TAG_NAME"
 FULLY_REMOTE_IMAGE_NAME="$USERNAME/$IMAGE_NAME:$TAG_NAME"
 
-cd "$1" || exit 5
+# cd "$1" || exit 5
 
-docker build -t "$FULLY_IMAGE_NAME" .
+docker build -t "$FULLY_IMAGE_NAME" -f "$1"/Dockerfile .
 docker tag "$FULLY_IMAGE_NAME" "$FULLY_REMOTE_IMAGE_NAME"
 docker push "$FULLY_REMOTE_IMAGE_NAME"
 
