@@ -1,4 +1,5 @@
-# Docker Shell-Test [![Docker Pulls](https://img.shields.io/docker/pulls/kamontat/shell-test.svg?style=flat-square)](https://store.docker.com/community/images/kamontat/shell-test)
+# Docker Shell-Test [![Docker Stars](https://img.shields.io/docker/stars/kamontat/shell-test.svg?style=flat-square)](https://store.docker.com/community/images/kamontat/shell-test) [![Docker Pulls](https://img.shields.io/docker/pulls/kamontat/shell-test.svg?style=flat-square)](https://store.docker.com/community/images/kamontat/shell-test)
+
 - hub: https://hub.docker.com/r/kamontat/shell-test/
 - store: https://store.docker.com/community/images/kamontat/shell-test
 
