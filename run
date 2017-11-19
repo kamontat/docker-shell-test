@@ -1,0 +1,207 @@
+#!/usr/bin/env bash
+
+help="
+run command with specify script and version 
+
+## Requirement
+1. docker
+2. run script file
+3. test script files (optional)
+
+## Usage
+run by './run' 'argument', if wrong you might didn't give permission to it.
+
+### Argument
+First argument should be one of list
+1. t | test
+2. c | cov | coverage
+3. custom | command
+Next n argument script will passing by keyword
+
+#### Accept keyword
+1. input run file @require
+    - f | file | with | of
+2. input 'repository' folder @optional
+    - d | directory | dir | folder | i | in
+2. input script type @require
+    - o | on
+3. input script version @optional
+    - v | version | a | at
+4. input custom command (for custom action only) @optional
+    - c | command
+    - w | which
+    - wi | which_is | which-is
+5. flag, debug mode @optional
+    - debug | verbose
+6. flag, dry mode @optional
+    - dry | dry-run | dryrun
+
+#### Note
+1. version should valid in kamontat/shell-test in docker hub
+    - cut of script name out
+    - link: https://hub.docker.com/r/kamontat/shell-test/tags/
+2. input command **MUST** be at latest of the script
+
+### Example
+run test of download file on bash-3.0
+- run test of download on bash version 3.0
+
+run test of download file on bash-3.0
+- run t on bash v 3.0 file download
+
+run coverage of download file on zsh-5.3.1-r0
+- run cov with download on zsh v 5.3.1-r0
+
+run bash version on bash-4.4.12
+- run command which-is bash --version
+
+# Who wrote
+Kamontat Chantrachirathumrong (github.com/kamontat)
+"
+
+# run test file download on bash version 3.0
+# run test on bash version 3.0 file download
+
+# run coverage file download on bash version 3.0
+# run coverage on bash version 3.0 file download
+
+# run custom on bash version 3.0 command bash --version
+# run command on bash version 3.0 which_is bash --version
+
+version="v1.0.0"
+debug=false
+dry=false
+
+keyword_help=("help" "h" "-h" "--help")
+keyword_v=("version" "v" "-v" "--version")
+
+keyword_test=("t" "test")
+keyword_cov=("c" "cov" "coverage")
+keyword_custom=("custom" "command")
+keyword_debug=("debug" "verbose")
+keyword_dryrun=("dry" "dryrun" "dry-run")
+
+keyword_file=("with" "of" "f" "file")
+keyword_folder=("i" "in" "d" "directory" "dir" "folder")
+keyword_in=("o" "on")
+keyword_version=("a" "at" "v" "version")
+keyword_command=("which" "which_is" "which-is" "w" "wi" "c" "command")
+
+action=
+file=
+folder=
+script_name="bash"
+script_version="latest"
+run_command=()
+
+in_dir="/repo"
+in_test_name="test"
+
+command -v docker &>/dev/null || exit 1
+
+# required 2 parameters
+#   1) text - input text
+#   2) option - option to check
+# return boolean
+is_match() {
+    local text="$1"
+    shift
+    for i in "$@"; do
+        [[ "$text" == "$i" ]] && return 0
+    done
+    return 1
+}
+
+if is_match "$1" "${keyword_test[@]}"; then
+  action="test"
+  shift
+fi
+
+if is_match "$1" "${keyword_cov[@]}"; then
+  action="shellcheck"
+  shift
+fi
+
+if is_match "$1" "${keyword_custom[@]}"; then
+  action="custom"
+  shift
+fi
+
+if is_match "$1" "${keyword_help[@]}"; then
+  echo "$help"
+  exit
+fi
+
+if is_match "$1" "${keyword_v[@]}"; then
+  echo "$version"
+  exit
+fi
+
+[ -z $action ] && exit 2
+
+until [ -z "$1" ]; do
+  if is_match "$1" "${keyword_file[@]}"; then
+    file="$2"
+    [ -f "$file" ] || exit 10 # not file
+    shift 2
+  elif is_match "$1" "${keyword_folder[@]}"; then
+    folder="$2"
+    [ -d "$folder" ] || exit 11 # not folder
+    shift 2
+  elif is_match "$1" "${keyword_in[@]}"; then
+    script_name="$2"
+    [[ $action == "test" ]] && action="$script_name"
+    shift 2
+  elif is_match "$1" "${keyword_version[@]}"; then
+    script_version="$2"
+    shift 2
+  elif is_match "$1" "${keyword_command[@]}"; then
+    shift
+    run_command=("$@")
+    break
+  elif is_match "$1" "${keyword_debug[@]}"; then
+    debug=true
+    shift
+  elif is_match "$1" "${keyword_dryrun[@]}"; then
+    dry=true
+    shift
+  else
+    echo "unknown key ($1) accept [file|in|version|...]"
+    exit 5
+  fi
+done
+
+v=""
+[ -z "$folder" ] && file="$(realpath "$file")" && v="-v $file:$in_dir/$in_test_name"
+[ -n "$folder" ] && v="-v $(realpath "$folder"):$in_dir"
+
+
+[[ $action == "custom" ]] && action=""
+
+if $debug; then
+  echo "action: $action"
+  echo "file: $file"
+  echo "folder: $folder"
+  echo "script: $script_name - $script_version"
+  echo "custom command: ${run_command[*]}"
+fi
+
+docker_command="docker run --entrypoint=$action --rm -it $v kamontat/shell-test:$script_name-$script_version"
+
+if [[ $action == "" ]]; then
+  if $debug; then
+    echo "run: $docker_command ${run_command[*]}"
+  fi
+  $dry && exit 2
+  $docker_command "${run_command[@]}"
+else 
+  test_command="$in_dir/$in_test_name"
+  [ -n "$folder" ] && test_command="$in_dir/$file"
+
+  if $debug; then
+    echo "run: $docker_command $test_command"
+  fi
+  $dry && exit 2
+  $docker_command "$test_command"
+fi
+
